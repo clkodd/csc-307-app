@@ -35,6 +35,9 @@ const users = {
 const findUserByName = (name) => {
   return users["users_list"].filter((user) => user["name"] === name);
 };
+const findUserByNameAndJob = (name, job) => {
+  return users["users_list"].filter((user) => user["name"] === name && user["job"] === job);
+};
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 const addUser = (user) => {
@@ -44,10 +47,26 @@ const addUser = (user) => {
 
 app.use(express.json());
 
-app.post("/users", (req, res) => {
-  const userToAdd = req.body;
-  addUser(userToAdd);
-  res.send();
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.get("/users", (req, res) => {
+  const name = req.query.name;
+  const job = req.query.job;
+  if (name != undefined && job == undefined) {
+    let result = findUserByName(name);
+    result = { users_list: result };
+    res.send(result);
+  } 
+  if (name != undefined && job != undefined) {
+    let result = findUserByNameAndJob(name, job);
+    result = { users_list: result };
+    res.send(result);
+  }
+  else {
+    res.send(users);
+  }
 });
 
 app.get("/users/:id", (req, res) => {
@@ -60,20 +79,24 @@ app.get("/users/:id", (req, res) => {
   }
 });
 
-app.get("/users", (req, res) => {
-  const name = req.query.name;
-  if (name != undefined) {
-    let result = findUserByName(name);
-    result = { users_list: result };
-    res.send(result);
-  } else {
-    res.send(users);
-  }
+
+app.post("/users", (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.send();
 });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+
+//
+//First, implement a hard delete operation to remove a particular user by id from the list. 
+// Hint: look at another HTTP method called DELETE. 
+//And remember this: always try to reuse existing URL patterns. 
+//Don't implement a route called '/delete-user'. 
+//Look at the resource you want to access and perform the delete action (you may have a URL pattern for it already).
+
+//Second, implement an additional action to get all users that match a given name and a given job. 
+//Hint: look at what we did in step 4 and extend it.
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
