@@ -45,7 +45,7 @@ const findUserByNameAndJob = (name, job) => {
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 const addUser = (user) => {
-  user["id"] = "" + Math.floor((1 + Math.random()) * 19983);
+  user["id"] = "" + Math.floor(Math.random() * 10000);
   users["users_list"].push(user);
   return user;
 };
@@ -96,7 +96,6 @@ app.get("/users/:id", (req, res) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  console.log(userToAdd);
   res.status(201).send(userToAdd);
 });
 
