@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 
+// TODO: add 201 content created
+
 const app = express();
 const port = 8000;
 const users = {
@@ -43,7 +45,7 @@ const findUserByNameAndJob = (name, job) => {
 const findUserById = (id) =>
   users["users_list"].find((user) => user["id"] === id);
 const addUser = (user) => {
-  user["id"] = "" + Math.floor((1 + Math.random()) * 2830);
+  user["id"] = "" + Math.floor((1 + Math.random()) * 19983);
   users["users_list"].push(user);
   return user;
 };
@@ -94,7 +96,8 @@ app.get("/users/:id", (req, res) => {
 app.post("/users", (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
-  res.status(201).send("Content created.");
+  console.log(userToAdd);
+  res.status(201).send(userToAdd);
 });
 
 app.delete("/users", (req, res) => {
